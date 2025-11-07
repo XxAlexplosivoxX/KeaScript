@@ -26,6 +26,9 @@ while true; do
 				exit 0
 				;;
 			configurar*) # pa configurar kea
+				while read iface; do
+					echo $iface
+				done < <( nmcli devices status | grep "ethernet" | awk '{print $1}' )
 				break
 				;;
 			instalar*) # pa instalar dependencias de la pasarela

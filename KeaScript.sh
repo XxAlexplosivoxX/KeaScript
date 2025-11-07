@@ -26,15 +26,52 @@ while true; do
 				exit 0
 				;;
 			configurar*) # pa configurar kea
-				while read iface; do
-					echo $iface
+				echo -en "listando interfaces..."
+				while read eth; do
+					ethernets+=("$eth")
 				done < <( nmcli device status | grep "ethernet" | awk '{print $1}' )
+				while read wless; do
+					wireless+=("$wless")
+				done < <( iw dev | grep "Interface" | awk '{ print $2 }' )
+				echo -e "$rline${verde}listando interfaces... Listo :D$reset"
+				echo -e "${cyan}elige la interfaz interna (por su número): "
+				select ifaceInterna in "${ethernets[@]}"; do
+					if [[ -n "$ifaceInterna" ]]; then
+						echo "${verde}Interfaz elegida: ${cyan}$ifaceInterna$reset"
+						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
+						read siono
+						if [[ "$siono" =~ ^[Ss]$ ]]; then
+							echo -e "${verde}vale...$reset"
+							break
+						elif [[ "$siono" =~ ^[Nn]$ ]]; then
+							echo -e "${verde}vale, a elegir otra vez...$reset"
+						fi
+					else
+						errorMsj "colocá algo válido pibe, no seas así..."
+					fi
+				done
+				echo -e "${cyan}elige la interfaz externa (por su número): "
+				select ifaceExterna in "${ethernets[@]}" "${wireless[@]}"; do
+					if [[ -n "$ifaceExterna" && "$ifaceExterna" -ne "$ifaceInterna" ]]; then
+						echo "${verde}Interfaz elegida: ${cyan}$ifaceExterna$reset"
+						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
+						read siono
+						if [[ "$siono" =~ ^[Ss]$ ]]; then
+							echo -e "${verde}vale...$reset"
+							break
+						elif [[ "$siono" =~ ^[Nn]$ ]]; then
+							echo -e "${verde}vale, a elegir otra vez...$reset"
+						fi
+					else
+						errorMsj "colocá algo válido pibe, no seas así..."
+					fi
+				done
 				break
 				;;
 			instalar*) # pa instalar dependencias de la pasarela
 				echo -e "${verde}instalando dependencias...$reset"
 				export DEBIAN_FRONTEND=noninteractive # desactiva interactividad (dialogos al instalar paquetes)
-				for dependencia in iptables-persistent kea-dhcp4-server; do
+				for dependencia in iptables-persistent kea-dhcp4-server iw; do
 					echo -en "$verde - instalando $dependencia"
 					if dpkg -s $dependencia &> /dev/null; then
 						echo -e "$rline$verde - $dependencia ya está instalado, no hace falta instalarlo...$reset"

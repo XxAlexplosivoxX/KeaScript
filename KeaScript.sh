@@ -37,7 +37,7 @@ while true; do
 				echo -e "${cyan}elige la interfaz interna (por su número): "
 				select ifaceInterna in "${ethernets[@]}"; do
 					if [[ -n "$ifaceInterna" ]]; then
-						echo "${verde}Interfaz elegida: ${cyan}$ifaceInterna$reset"
+						echo -e "${verde}Interfaz elegida: ${cyan}$ifaceInterna$reset"
 						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
 						read siono
 						if [[ "$siono" =~ ^[Ss]$ ]]; then
@@ -52,8 +52,8 @@ while true; do
 				done
 				echo -e "${cyan}elige la interfaz externa (por su número): "
 				select ifaceExterna in "${ethernets[@]}" "${wireless[@]}"; do
-					if [[ -n "$ifaceExterna" && "$ifaceExterna" -ne "$ifaceInterna" ]]; then
-						echo "${verde}Interfaz elegida: ${cyan}$ifaceExterna$reset"
+					if [[ -n "$ifaceExterna" || "$ifaceExterna" -ne "$ifaceInterna" ]]; then
+						echo -e "${verde}Interfaz elegida: ${cyan}$ifaceExterna$reset"
 						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
 						read siono
 						if [[ "$siono" =~ ^[Ss]$ ]]; then

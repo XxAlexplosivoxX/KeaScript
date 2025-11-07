@@ -18,19 +18,34 @@ errorMsj() { # mostrar mensaje de error con cuenta regresiva
 [[ $EUID -ne 0 ]] && { echo -e "${rojo}Debes ser superusuario pibe, deja de cagar!!"; exit 1; }
 while true; do
 	echo -e "${cyan}Qué querés hacer pibe?:$reset"
+	# menú interactivo
 	select eleccion in salir "actualizar repositorios" "instalar dependencias" "configurar pasarela"; do
 		case $eleccion in
-			salir)
+			salir) # pa salir
 				echo -e "${verde}vale bro, adiós...${reset}"
 				exit 0
 				;;
-			configurar*)
-				
+			configurar*) # pa configurar kea
+				break
 				;;
-			instalar*)
-				
+			instalar*) # pa instalar dependencias de la pasarela
+				echo -e "${verde}instalando dependencias...$reset"
+				export DEBIAN_FRONTEND=noninteractive # deactiva interactividad (dialogos al instalar paquetes)
+				for dependencia in iptables-persistent kea-dhcp4-server; do
+					if dpkg -s $dependencia &> /dev/null; then
+						echo "${verde} - $dependencia ya está instalado, no hace falta instalarlo...$reset"
+					else
+						if apt install $dependencia -y &> /dev/null; then
+							echo "${verde} - $dependencia instalado correctamente :D$reset"
+						else
+							echo "${rojo} - $dependencia falló al ser instalada :($reset"
+						fi
+					fi
+				done
+				echo -e "${verde}Listo$reset"
+				break
 				;;
-			actualizar*)
+			actualizar*) # pa actualizar repositorios y/o paquetes
 				echo -en "${verde}actualizando repo...$reset"
 				apt update &> /dev/null
 				echo -en "${rline}${verde}actualizando repo... Listo :D$reset\n"

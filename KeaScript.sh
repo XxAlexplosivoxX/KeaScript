@@ -55,7 +55,7 @@ while true; do
 				done
 				echo -e "${cyan}elige la interfaz externa (por su número):$reset"
 				select ifaceExterna in "${ethernets[@]}" "${wireless[@]}"; do
-					if [[ ! -z "$ifaceExterna" || "$ifaceExterna" -ne "$ifaceIN" ]]; then
+					if [[ ! -z "$ifaceExterna" || "$ifaceExterna" != "$ifaceIN" ]]; then
 						echo -e "${verde}Interfaz externa elegida: ${cyan}$ifaceExterna$reset"
 						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
 						read siono

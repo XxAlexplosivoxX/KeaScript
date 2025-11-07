@@ -55,7 +55,7 @@ while true; do
 				done
 				echo -e "${cyan}elige la interfaz externa (por su número): "
 				select ifaceExterna in "${ethernets[@]}" "${wireless[@]}"; do
-					if [[ -n "$ifaceExterna" || "$ifaceExterna" -ne "$ifaceIN" ]]; then
+					if [[ -n "$ifaceExterna" || "$ifaceExterna" -eq "$ifaceIN" ]]; then
 						echo -e "${verde}Interfaz externa elegida: ${cyan}$ifaceExterna$reset"
 						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
 						read siono
@@ -70,6 +70,7 @@ while true; do
 						errorMsj "colocá algo válido pibe, no seas así..."
 					fi
 				done
+				echo -e "interfaz interna: $ifaceIN\ninterfaz externa: $ifaceEX"
 				break
 				;;
 			instalar*) # pa instalar dependencias de la pasarela

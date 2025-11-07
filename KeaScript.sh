@@ -30,15 +30,17 @@ while true; do
 				;;
 			instalar*) # pa instalar dependencias de la pasarela
 				echo -e "${verde}instalando dependencias...$reset"
-				export DEBIAN_FRONTEND=noninteractive # deactiva interactividad (dialogos al instalar paquetes)
+				export DEBIAN_FRONTEND=noninteractive # desactiva interactividad (dialogos al instalar paquetes)
 				for dependencia in iptables-persistent kea-dhcp4-server; do
+					echo -en "$verde - instalando $dependencia"
 					if dpkg -s $dependencia &> /dev/null; then
-						echo "${verde} - $dependencia ya está instalado, no hace falta instalarlo...$reset"
+						echo -e "$rline$verde - $dependencia ya está instalado, no hace falta instalarlo...$reset"
 					else
+						echo 
 						if apt install $dependencia -y &> /dev/null; then
-							echo "${verde} - $dependencia instalado correctamente :D$reset"
+							echo -e "$rline$verde - $dependencia instalado correctamente :D$reset"
 						else
-							echo "${rojo} - $dependencia falló al ser instalada :($reset"
+							echo -e "$rline$rojo - $dependencia falló al ser instalada :($reset"
 						fi
 					fi
 				done

@@ -36,9 +36,9 @@ while true; do
 					wireless+=("$wless")
 				done < <( iw dev | grep "Interface" | awk '{ print $2 }' )
 				echo -e "$rline${verde}listando interfaces... Listo :D$reset"
-				echo -e "${cyan}elige la interfaz interna (por su número): "
+				echo -e "${cyan}elige la interfaz interna (por su número):$reset"
 				select ifaceInterna in "${ethernets[@]}"; do
-					if [[ -n "$ifaceInterna" ]]; then
+					if [[ ! -z "$ifaceInterna" ]]; then
 						echo -e "${verde}Interfaz interna elegida: ${cyan}$ifaceInterna$reset"
 						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
 						read siono
@@ -53,9 +53,9 @@ while true; do
 						errorMsj "colocá algo válido pibe, no seas así..."
 					fi
 				done
-				echo -e "${cyan}elige la interfaz externa (por su número): "
+				echo -e "${cyan}elige la interfaz externa (por su número):$reset"
 				select ifaceExterna in "${ethernets[@]}" "${wireless[@]}"; do
-					if [[ -n "$ifaceExterna" || "$ifaceExterna" -eq "$ifaceIN" ]]; then
+					if [[ ! -z "$ifaceExterna" || "$ifaceExterna" -ne "$ifaceIN" ]]; then
 						echo -e "${verde}Interfaz externa elegida: ${cyan}$ifaceExterna$reset"
 						echo -en "Querés continuar con esa interfaz?(s/n): $cyan"
 						read siono
